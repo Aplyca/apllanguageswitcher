@@ -1,0 +1,46 @@
+<IfModule mod_rewrite.c>
+
+	RewriteEngine On
+
+	### BOT MATCH START
+
+	### If we detect a bot at all, set an environment variable
+	# NOTE: It is okay to match bad bots here too. We just don't want to match
+	#       real human people.
+	# To match most bots, check out User-Agent and look for empty referrer
+	RewriteCond %{HTTP_USER_AGENT} (Googlebot|Slurp|CazoodleBot|msnbot|Ask.*Jeeves|InfoPath|Baiduspider) [NC]
+	RewriteCond %{HTTP_REFERER} ^$
+	RewriteRule ^.* - [E=HTTP_CLIENT_IS_BOT:1]
+	# Certain bots actually do have referrers. Catch them too.
+	#RewriteCond %{HTTP_USER_AGENT} (becomebot) [NC]
+	#RewriteRule ^.* - [E=HTTP_CLIENT_IS_BOT:1]
+
+	### BOT MATCH END
+
+	RewriteCond %{REQUEST_URI} ^/$
+	RewriteCond %{SERVER_PORT} !^443$
+	RewriteCond %{HTTP_HOST} !^admin\..*
+	RewriteCond %{ENV:HTTP_CLIENT_IS_BOT} !^1$
+	RewriteCond %{HTTP_COOKIE} !.*eZSESSID.*
+	RewriteRule .* http://%{HTTP_HOST}:%{SERVER_PORT}/switchsite/geoip/ [R,L]
+
+	RewriteCond %{REQUEST_URI} ^/$
+	RewriteCond %{SERVER_PORT} ^443$
+	RewriteCond %{HTTP_HOST} !^admin\..*
+	RewriteCond %{ENV:HTTP_CLIENT_IS_BOT} !^1$
+	RewriteCond %{HTTP_COOKIE} !.*eZSESSID.*
+	RewriteRule .* https://%{HTTP_HOST}/switchsite/geoip/ [R,L]
+
+	### SESSION CHECK ( country and currency needs to be in session ) ###
+	RewriteCond %{HTTP_HOST} !.*webdav|soap.*
+	RewriteCond %{HTTP_HOST} !^admin\..*
+	RewriteCond %{SERVER_PORT} !^443$
+	RewriteCond %{ENV:HTTP_CLIENT_IS_BOT} !^1$
+	RewriteCond %{HTTP_COOKIE} !.*eZSESSID.*
+	RewriteCond %{REQUEST_URI} !.*switchsite/geoip.*
+	RewriteCond %{REQUEST_URI} !^/index.php*
+	RewriteCond %{REQUEST_URI} !^/(var|extension|design|share|site|[a-zA-Z_]*admin)/.*
+	RewriteRule ^(.*)$ http://%{HTTP_HOST}:%{SERVER_PORT}/switchsite/geoip$1 [R,L]
+
+	
+</IfModule>

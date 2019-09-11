@@ -1,0 +1,6 @@
+	
+	
+	{def 	$translations = language_switcher( $module_result.content_info.node_id )}	
+	{foreach $translations as $siteaccessName => $lang}
+			<a href="{$lang.url}" {if $lang.currentsiteaccess}class="on"{/if} style="cursor: pointer;" title={$lang.text|i18n('cid/content', ,)}>{$lang.text|i18n('cid/content', ,)}</a>
+	{/foreach}
