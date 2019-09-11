@@ -1,0 +1,19 @@
+{
+    "name": "aplyca/apllanguageswitcher-ls",
+    "description": "apllanguageswitcher eZ publish Legacy extension",
+    "type": "ezpublish-legacy-extension",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Aplyca SAS",
+            "homepage": "http://www.aplyca.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "ezsystems/ezpublish-legacy-installer": "*"
+    },
+    "extra": {
+        "ezpublish-legacy-extension-name": "apllanguageswitcher"
+    }
+}
